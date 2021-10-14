@@ -14,40 +14,44 @@ import requests
 
 def main(dict):
 
-    if dict["dealerID"]:
+    #if dict["dealerID"]:
        
-        databaseName = "reviews"
+    print(dict['dealerID'])
+    
+    databaseName = "reviews"
 
-        try:
-            client = Cloudant.iam(
-                account_name=dict["COUCH_USERNAME"],
-                api_key=dict["IAM_API_KEY"],
-                connect=True,
-            )
-            #print("Databases: {0}".format(client.all_dbs()))
+    #return({"Docs": int(dict['dealerID'])})
 
-            my_database = client[databaseName] 
-            
-            #selector = {'id ': dict["dealerID"]} 
-            selector = {'dealership': {'$eq': dict["dealerID"]}}
-            result_by_filter = my_database.get_query_result(selector,raw_result=True,limit=100) 
+    try:
+        client = Cloudant.iam(
+            account_name=dict["COUCH_USERNAME"],
+            api_key=dict["IAM_API_KEY"],
+            connect=True,
+        )
+        #print("Databases: {0}".format(client.all_dbs()))
 
-            reviews = result_by_filter["docs"]
-            
-            return({"Docs": reviews})
-            
+        my_database = client[databaseName] 
+        
+        #selector = {'id ': dict["dealerID"]} 
+        selector = {'dealership': {'$eq': int(dict['dealerID'])}}
+        result_by_filter = my_database.get_query_result(selector,raw_result=True,limit=100) 
 
-        except CloudantException as ce:
-            print("unable to connect")
-            return {"error": ce}
-        except (requests.exceptions.RequestException, ConnectionResetError) as err:
-            print("connection error")
-            return {"error": err}
+        reviews = result_by_filter["docs"]
+        
+        return({"Docs": reviews})
+        
 
-        return {"dbs": client.all_dbs()}
+    except CloudantException as ce:
+        print("unable to connect")
+        return {"error": ce}
+    except (requests.exceptions.RequestException, ConnectionResetError) as err:
+        print("connection error")
+        return {"error": err}
+
+    return {"dbs": client.all_dbs()}
        
        
-    else:
-        return {"status":500,"message":"Error: missing dealerID"}
+    #else:
+    #    return {"status":500,"message":"Error: missing dealerID"}
     
 
