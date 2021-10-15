@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import CarMake, CarModel, CarDealer
-from .restapis import get_dealers_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_by_state_from_cf
 
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -87,6 +87,9 @@ def get_dealerships(request):
         url = "https://b8d6e378.eu-gb.apigw.appdomain.cloud/api/dealership"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
+        # Get dealers from the URL and state
+        dealerships = get_dealer_by_state_from_cf(url, "VA")
+
         # Concat all dealer's short name
         dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
