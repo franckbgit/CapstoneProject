@@ -97,6 +97,10 @@ def get_dealerships(request):
 
         #return render(request, 'djangoapp/index.html', context)
 
+
+# Create a `get_dealer_details` view to render the reviews of a dealer
+# def get_dealer_details(request, dealer_id):
+# ...
 def get_dealer_details(request, dealer_id):
     context = {}
     if request.method == "GET":
@@ -106,15 +110,22 @@ def get_dealer_details(request, dealer_id):
         #reviews = get_dealer_reviews_from_cf(url, "15")
 
         # Concat all dealer's short name
-        reviews_names = ' '.join([review.name for review in reviews])
+        reviews_names = ' '.join([review.sentiment for review in reviews])
         # Return a list of dealer short name
         return HttpResponse(reviews_names)
-
-# Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
-
+def add_review(request, dealer_id):
+    if request.user.is_authenticated():
+        review = dic()
+        review["dealership"] = dealer_id
+        review["review"] = request.POST['review']
+        review["name"] = request.user.first_name
+        review["purchase"] = True
+        review["purchase_date"] = datetime.utcnow().isoformat()
+        review["car_make"] = request.POST['car_make']
+        review["car_model"] = request.POST['car_model']
+        review["car_year"] = request.POST['car_year']
+        

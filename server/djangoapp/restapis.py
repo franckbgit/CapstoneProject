@@ -26,12 +26,17 @@ def get_request(url, **kwargs):
 
 def get_request_with_key(url, api_key, **kwargs):
     print(kwargs)
-    print(kwargs["dealerID"])
     print("GET from {} ".format(url))
     try:
+        params = dict()
+        params["text"] = kwargs["text"]
+        params["version"] = kwargs["version"]
+        params["features"] = kwargs["features"]
+        params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+
         # Call get method of requests library with URL and parameters
         response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                    params=kwargs, auth=HTTPBasicAuth('apikey', api_key) )
+                                    params=params, auth=HTTPBasicAuth('apikey', api_key) )
     except:
         # If any error occurs
         print("Network exception occurred")
@@ -42,7 +47,20 @@ def get_request_with_key(url, api_key, **kwargs):
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
-
+def post_request(url, json_payload, **kwargs):
+    print(kwargs)
+    print("POST from {} ".format(url))
+    try:
+        # Call post method of requests library with URL and parameters
+        #response = requests.get(url, headers={'Content-Type': 'application/json'}, params=kwargs)
+         requests.post(url, params=kwargs, json=json_payload)
+    except:
+        # If any error occurs
+        print("Network exception occurred")
+    status_code = response.status_code
+    print("With status {} ".format(status_code))
+    json_data = json.loads(response.text)
+    return json_data
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):
@@ -155,6 +173,28 @@ def get_dealer_reviews_from_cf (url, dealerId):
 # def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
-def analyze_review_sentiments(dealerreview)
+def analyze_review_sentiments(text): 
+
+    # It was tricky to find that I had to add /v1/analyze to the URL
+    # Found it in the getting started doc: https://cloud.ibm.com/docs/natural-language-understanding/getting-started.html#getting-started-tutorial
+    # If calling the URL without {url}/v1/analyze?version=2019-07-12 it gives a 404 error
+
+    url = "https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/45aaf158-a26b-469c-9940-fe9749d4f224/v1/analyze?version=2019-07-12"
+    api_key = "4ozkTNQ5n2qAXQwLCOzmxPWsW0YmfvGLTgSiD9JUPQ3x" 
+    version = "2020-08-01" 
+    feature = "sentiment" 
+    return_analyzed_text = True 
+
+    result_json = get_request_with_key(url, text=text, api_key=api_key, version=version, features=feature, 
+        return_analyzed_text=return_analyzed_text) 
 
 
+    sentiment = result_json['sentiment']['document']['label'] 
+
+    print("result from NLU")
+    print(result_json)
+
+    print("sentiment")
+    print(sentiment)
+
+    return(sentiment) 
