@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import CarMake, CarModel, CarDealer, DealerReview
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_by_state_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_by_state_from_cf, get_dealer_reviews_from_cf, post_request
 
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -128,4 +128,12 @@ def add_review(request, dealer_id):
         review["car_make"] = request.POST['car_make']
         review["car_model"] = request.POST['car_model']
         review["car_year"] = request.POST['car_year']
+
+        json_payload  = dic()
+        json_payload["review"] = review
+
+        json_result = post_request(url, json_payload, dealerId=dealer_id)
+
+        print(json_result)
+        return HttpResponse(json_result)
         
