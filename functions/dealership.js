@@ -14,7 +14,35 @@ async function main(params) {
         plugins: { iamauth: { iamApiKey: params.IAM_API_KEY } }
     });
 
-	if (!params.state) {
+	if (params.dealerID) {
+		//returns the dealerships with this DealerID
+
+		try {
+
+			let dealerships = await cloudant.db.use('dealerships').find({ "selector": { "id": parseInt(params.dealerID) } })
+			dealershipsFormatted = dealerships.docs
+			return { dealershipsFormatted };
+		
+		} catch (error) {
+			return { error: error.description };
+		}
+	}
+	else if (params.state) {
+
+		//returns dealership for a specific state
+
+		try {
+
+			let dealerships = await cloudant.db.use('dealerships').find({ "selector": { "st":params.state } })
+			dealershipsFormatted = dealerships.docs
+			return { dealershipsFormatted };
+		
+		} catch (error) {
+			return { error: error.description };
+		}
+
+	}
+	else{
 		//returns all dealerships
 
 		try {
@@ -30,21 +58,7 @@ async function main(params) {
 		} catch (error) {
 			return { error: error.description };
 		}
-	}
-	else{
-		//returns dealership for a specific state
-
-		try {
-
-			let dealerships = await cloudant.db.use('dealerships').find({ selector: { st:'VA' } })
-			dealershipsFormatted = dealerships.docs
-			return { dealershipsFormatted };
-		
-		} catch (error) {
-			return { error: error.description };
-		}
 
 	}
 
 }
-
