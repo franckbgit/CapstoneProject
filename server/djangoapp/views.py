@@ -118,6 +118,7 @@ def get_dealer_details(request, dealer_id):
         #return HttpResponse(reviews_names)
 
         context["dealership_reviews"] = reviews
+        context["dealer_id"] = dealer_id
 
         return render(request, 'djangoapp/dealer_details.html', context)
 
@@ -125,7 +126,12 @@ def get_dealer_details(request, dealer_id):
 # def add_review(request, dealer_id):
 # ...
 def add_review(request, dealer_id):
-    if request.user.is_authenticated():
+    #if request.user.is_authenticated():
+    context = {}
+    if request.method == "GET":
+        context["dealer_id"] = dealer_id
+        return render(request, 'djangoapp/add_review.html', context)
+    if request.method == "POST":
         review = dic()
         review["dealership"] = dealer_id
         review["review"] = request.POST['review']
