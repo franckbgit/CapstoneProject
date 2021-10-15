@@ -10,8 +10,29 @@
     <body>
 
     <!--Add a nav bar here -->
+    {% include 'djangoapp/navbar.html' %}
 
     <!-- Add reviews as cards -->
+
+    <table class="table" id="table" data-filter-control="true">
+        <thead>
+            <tr>
+                <th data-field="review">Review</th>
+                <th data-field="city">Sentiment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in dealership_reviews %}
+                <tr>
+                    <td>{{review.review}}</td>
+                    <td>{{review.sentiment}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!--Add a footer here -->
+    {% include 'djangoapp/footer.html' %}
 
     </body>
 

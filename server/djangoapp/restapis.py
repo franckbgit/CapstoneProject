@@ -10,7 +10,7 @@ from requests.auth import HTTPBasicAuth
 #                                     auth=HTTPBasicAuth('apikey', api_key))
 def get_request(url, **kwargs):
     print(kwargs)
-    print(kwargs["dealerID"])
+    #print(kwargs["dealerID"])
     print("GET from {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
