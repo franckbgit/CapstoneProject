@@ -188,8 +188,10 @@ def analyze_review_sentiments(text):
     result_json = get_request_with_key(url, text=text, api_key=api_key, version=version, features=feature, 
         return_analyzed_text=return_analyzed_text) 
 
-
-    sentiment = result_json['sentiment']['document']['label'] 
+    try:
+        sentiment = result_json['sentiment']['document']['label'] 
+    except:
+        sentiment = "neutral"
 
     print("result from NLU")
     print(result_json)

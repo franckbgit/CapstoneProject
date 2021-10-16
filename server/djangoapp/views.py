@@ -141,14 +141,21 @@ def add_review(request, dealer_id):
 
         review = dict()
         review["dealership"] = dealer_id
-        review["review"] = request.POST['review']
+        #review["review"] = request.POST['review']
+        review["review"] = request.POST.get('review', " ")
         review["name"] = request.user.first_name + " " + request.user.last_name
  
-        if(request.POST['purchasecheck'] == True):
+        if request.POST.get('purchasecheck', False):
             review["purchase"] = True
         else:
             review["purchase"] = False
-        review["purchase_date"] = datetime.utcnow().isoformat()
+
+        review["purchase_date"] = request.POST.get('purchasedate', datetime.utcnow().isoformat())
+
+        #if request.POST['purchasedate']:
+        #    review["purchase_date"] = request.POST['purchasedate']
+        #else:
+        #    review["purchase_date"] = datetime.utcnow().isoformat()
 
         car = get_object_or_404(CarModel, pk=request.POST['car'])
 
