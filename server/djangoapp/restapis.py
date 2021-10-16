@@ -53,7 +53,7 @@ def post_request(url, json_payload, **kwargs):
     try:
         # Call post method of requests library with URL and parameters
         #response = requests.get(url, headers={'Content-Type': 'application/json'}, params=kwargs)
-         requests.post(url, params=kwargs, json=json_payload)
+         response = requests.post(url, params=kwargs, json=json_payload)
     except:
         # If any error occurs
         print("Network exception occurred")
@@ -158,7 +158,7 @@ def get_dealer_reviews_from_cf (url, dealerId):
             review_obj = DealerReview(dealership=review_doc["dealership"], name=review_doc["name"], purchase=review_doc["purchase"],
                                    review=review_doc["review"], purchase_date=review_doc["purchase_date"], car_make=review_doc["car_make"],
                                    car_model=review_doc["car_model"],
-                                   car_year=review_doc["car_year"], id=review_doc["id"], sentiment="")
+                                   car_year=review_doc["car_year"], sentiment="")
 
             # Getting the sentiment
             review_obj.sentiment = analyze_review_sentiments(review_obj.review)
